@@ -2,18 +2,21 @@ package org.example
 
 import kotlin.math.abs
 
-private fun part1(): Int {
+private fun parseLists(): Pair<List<Int>, List<Int>> {
   val lists = readFile("/1_1.txt").lines().map { it.split("   ") }
   val leftList = lists.map { it[0].toInt() }.sorted()
   val rightList = lists.map { it[1].toInt() }.sorted()
 
+  return Pair(leftList, rightList)
+}
+
+private fun part1(): Int {
+  val (leftList, rightList) = parseLists()
   return leftList.zip(rightList).sumOf { (left, right) -> abs(left - right) }
 }
 
 private fun part2(): Int {
-  val lists = readFile("/1_1.txt").lines().map { it.split("   ") }
-  val leftList = lists.map { it[0].toInt() }
-  val rightList = lists.map { it[1].toInt() }
+  val (leftList, rightList) = parseLists()
 
   val counts = mutableMapOf<Int, Int>()
   for (number in rightList) {

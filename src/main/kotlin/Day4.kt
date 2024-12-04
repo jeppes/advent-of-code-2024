@@ -9,40 +9,36 @@ private fun part1(grid: Grid<Char>): Int {
         UpLeft, UpRight, DownLeft, DownRight
     )
 
-    return grid.sumOf { (point, char) ->
-        if (char == 'X') {
+    return grid
+        .filter { (_, value) -> value == 'X' }
+        .sumOf { (point, _) ->
             allDirections
                 .map { direction -> grid.walk(startAt = point, steps = 3, direction = direction) }
                 .count { path -> xmas == path }
-        } else {
-            0
         }
-    }
 }
 
 
 private fun part2(grid: Grid<Char>): Int {
     val mas = listOf('M', 'A', 'S')
 
-    return grid.count { (point, char) ->
-        if (char != 'A') {
-            return@count false
+    return grid
+        .filter { (_, value) -> value == 'A' }
+        .count { (point, _) ->
+            val upLeftToBottomRight =
+                grid.walk(startAt = point.go(UpLeft), steps = 2, direction = DownRight)
+            val downRightToUpLeft =
+                grid.walk(startAt = point.go(DownRight), steps = 2, direction = UpLeft)
+
+            val upRightToDownLeft =
+                grid.walk(startAt = point.go(UpRight), steps = 2, direction = DownLeft)
+            val downLeftToUpRight =
+                grid.walk(startAt = point.go(DownLeft), steps = 2, direction = UpRight)
+
+            val isMas1 = upLeftToBottomRight == mas || downRightToUpLeft == mas
+            val isMas2 = upRightToDownLeft == mas || downLeftToUpRight == mas
+            isMas1 && isMas2
         }
-
-        val upLeftToBottomRight =
-            grid.walk(startAt = point.go(UpLeft), steps = 2, direction = DownRight)
-        val downRightToUpLeft =
-            grid.walk(startAt = point.go(DownRight), steps = 2, direction = UpLeft)
-
-        val upRightToDownLeft =
-            grid.walk(startAt = point.go(UpRight), steps = 2, direction = DownLeft)
-        val downLeftToUpRight =
-            grid.walk(startAt = point.go(DownLeft), steps = 2, direction = UpRight)
-
-        val isMas1 = upLeftToBottomRight == mas || downRightToUpLeft == mas
-        val isMas2 = upRightToDownLeft == mas || downLeftToUpRight == mas
-        isMas1 && isMas2
-    }
 }
 
 fun main() {

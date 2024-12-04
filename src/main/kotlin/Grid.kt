@@ -11,28 +11,14 @@ data class Grid<T>(
     }
 
     override fun iterator(): Iterator<Pair<Point, T>> {
-        return object : Iterator<Pair<Point, T>> {
-            private var row = 0
-            private var column = 0
-
-            override fun hasNext(): Boolean {
-                return row < listOfList.size
+        return listOfList.indices.flatMap { row ->
+            listOfList[row].indices.map { column ->
+                Pair(
+                    Point(row = row, column = column),
+                    listOfList[row][column]
+                )
             }
-
-            override fun next(): Pair<Point, T> {
-                val point = Point(row = row, column = column)
-                val value = listOfList[row][column]
-
-                if (column == listOfList[row].size - 1) {
-                    row++
-                    column = 0
-                } else {
-                    column++
-                }
-
-                return Pair(point, value)
-            }
-        }
+        }.iterator()
     }
 
     operator fun get(point: Point): T {

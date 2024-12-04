@@ -28,7 +28,11 @@ data class Grid<T>(
         }
     }
 
-    fun atOrNull(point: Point): T? {
+    operator fun get(point: Point): T {
+        return listOfList[point.row][point.column]
+    }
+
+    fun getOrNull(point: Point): T? {
         return listOfList.getOrNull(point.row)?.getOrNull(point.column)
     }
 
@@ -38,6 +42,6 @@ data class Grid<T>(
         direction: Direction,
     ): List<T?> {
         val points = (1..steps).fold(listOf(startAt)) { points, _ -> points + points.last().go(direction) }
-        return points.mapNotNull(this::atOrNull)
+        return points.mapNotNull(::getOrNull)
     }
 }

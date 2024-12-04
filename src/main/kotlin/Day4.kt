@@ -1,26 +1,19 @@
 package org.example
 
-
-fun fourStepsInAllDirections(grid: List<List<Char>>, point: Point): List<List<Char>> {
-    return listOf(
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Up),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Down),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Left),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Right),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.UpLeft),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.UpRight),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.DownLeft),
-        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.DownRight),
-    ).map { it.filterNotNull() }
-}
-
 private fun part1(grid: Grid<Char>): Int {
     var sum = 0
 
     val xmas = listOf('X', 'M', 'A', 'S')
+    val allDirections = listOf(
+        Direction.Up, Direction.Down, Direction.Left, Direction.Right,
+        Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight
+    )
+
     grid.forEach { point, char ->
         if (char == 'X') {
-            sum += fourStepsInAllDirections(grid, point).count { xmas == it }
+            sum += allDirections
+                .map { direction -> grid.walkInDirection(startAt = point, steps = 3, direction = direction) }
+                .count { xmas == it }
         }
     }
 

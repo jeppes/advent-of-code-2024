@@ -3,6 +3,13 @@ package org.example
 data class Grid<T>(
     private val listOfList: List<List<T>>,
 ) : Iterable<Pair<Point, T>> {
+    init {
+        val columnCount = listOfList.firstOrNull()?.size ?: 0
+        require(listOfList.all { it.size == columnCount }) {
+            "All rows in grid must have the same number of column ($columnCount)"
+        }
+    }
+
     override fun iterator(): Iterator<Pair<Point, T>> {
         return object : Iterator<Pair<Point, T>> {
             private var row = 0
@@ -23,7 +30,7 @@ data class Grid<T>(
                     column++
                 }
 
-                return point to value
+                return Pair(point, value)
             }
         }
     }
@@ -32,11 +39,11 @@ data class Grid<T>(
         return listOfList[point.row][point.column]
     }
 
-    fun getOrNull(point: Point): T? {
+    private fun getOrNull(point: Point): T? {
         return listOfList.getOrNull(point.row)?.getOrNull(point.column)
     }
 
-    fun walkInDirection(
+    fun walk(
         startAt: Point,
         steps: Int,
         direction: Direction,

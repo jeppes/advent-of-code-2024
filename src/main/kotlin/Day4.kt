@@ -10,7 +10,7 @@ private fun part1(grid: Grid<Char>): Int {
     return grid.sumOf { (point, char) ->
         if (char == 'X') {
             allDirections
-                .map { direction -> grid.walkInDirection(startAt = point, steps = 3, direction = direction) }
+                .map { direction -> grid.walk(startAt = point, steps = 3, direction = direction) }
                 .count { xmas == it }
         } else {
             0
@@ -28,14 +28,14 @@ private fun part2(grid: Grid<Char>): Int {
         }
 
         val upLeftToBottomRight =
-            grid.walkInDirection(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
+            grid.walk(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
         val downRightToUpLeft =
-            grid.walkInDirection(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
+            grid.walk(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
 
         val upRightToDownLeft =
-            grid.walkInDirection(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
+            grid.walk(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
         val downLeftToUpRight =
-            grid.walkInDirection(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
+            grid.walk(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
 
         val isMas1 = upLeftToBottomRight == mas || downRightToUpLeft == mas
         val isMas2 = upRightToDownLeft == mas || downLeftToUpRight == mas

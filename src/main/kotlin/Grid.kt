@@ -11,10 +11,7 @@ fun <T> Grid<T>.forEach(block: (Point, T) -> Unit) {
         for (column in this[row].indices) {
             val point = Point(row = row, column = column)
             val t = atOrNull(point)!!
-            block(
-                point,
-                t
-            )
+            block(point, t)
         }
     }
 }

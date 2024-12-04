@@ -1,46 +1,31 @@
 package org.example
 
+enum class Direction {
+    Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight
+}
+
 data class Point(val column: Int, val row: Int) {
-
-    fun goLeft(): Point {
-        return copy(column = column - 1)
-    }
-
-    fun goRight(): Point {
-        return copy(column = column + 1)
-    }
-
-    fun goUp(): Point {
-        return copy(row = row - 1)
-    }
-
-    fun goDown(): Point {
-        return copy(row = row + 1)
-    }
-
-    fun goUpLeft(): Point {
-        return copy(column = column - 1, row = row - 1)
-    }
-
-    fun goUpRight(): Point {
-        return copy(column = column + 1, row = row - 1)
-    }
-
-    fun goDownLeft(): Point {
-        return copy(column = column - 1, row = row + 1)
-    }
-
-    fun goDownRight(): Point {
-        return copy(column = column + 1, row = row + 1)
+    fun go(direction: Direction): Point {
+        return when (direction) {
+            Direction.Left -> copy(column = column - 1)
+            Direction.Right -> copy(column = column + 1)
+            Direction.Up -> copy(row = row - 1)
+            Direction.Down -> copy(row = row + 1)
+            Direction.UpLeft -> copy(column = column - 1, row = row - 1)
+            Direction.UpRight -> copy(column = column + 1, row = row - 1)
+            Direction.DownLeft -> copy(column = column - 1, row = row + 1)
+            Direction.DownRight -> copy(column = column + 1, row = row + 1)
+        }
     }
 
     val cardinalNeighbors: List<Point>
         get() {
-            return listOf(goLeft(), goRight(), goUp(), goDown())
+            return listOf(Direction.Left, Direction.Right, Direction.Up, Direction.Down).map { go(it) }
         }
 
     val allNeighbors: List<Point>
         get() {
-            return listOf(goLeft(), goRight(), goUp(), goDown(), goUpLeft(), goUpRight(), goDownLeft(), goDownRight())
+            return Direction.entries.map { go(it) }
         }
+
 }

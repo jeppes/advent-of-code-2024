@@ -1,45 +1,26 @@
 package org.example
 
-fun <T> List<List<T>>.atOrNull(point: Point): T? {
-    return this.getOrNull(point.row)?.getOrNull(point.column)
-}
-
 
 fun fourStepsInAllDirections(grid: List<List<Char>>, point: Point): List<List<Char>> {
-    val upLeft = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goUpLeft() }
-    val up = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goUp() }
-    val upRight = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goUpRight() }
-    val right = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goRight() }
-    val downRight = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goDownRight() }
-    val down = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goDown() }
-    val downLeft = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goDownLeft() }
-    val left = (1..3).fold(listOf(point)) { points, _ -> points + points.last().goLeft() }
-
     return listOf(
-        upLeft,
-        up,
-        upRight,
-        right,
-        downRight,
-        down,
-        downLeft,
-        left
-    ).map { points -> points.mapNotNull { point -> grid.atOrNull(point) } }
-
-
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Up),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Down),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Left),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.Right),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.UpLeft),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.UpRight),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.DownLeft),
+        grid.walkInDirection(startAt = point, steps = 3, direction = Direction.DownRight),
+    ).map { it.filterNotNull() }
 }
 
-private fun part1(input: String): Int {
-    val grid = input.lines().map { it.toList() }.toList()
-
+private fun part1(grid: Grid<Char>): Int {
     var sum = 0
 
     val xmas = listOf('X', 'M', 'A', 'S')
-    for (row in grid.indices) {
-        for (column in grid[row].indices) {
-            if (grid.atOrNull(Point(row = row, column = column)) == 'X') {
-                sum += fourStepsInAllDirections(grid, Point(row = row, column = column)).count { xmas == it }
-            }
+    grid.forEach { point, char ->
+        if (char == 'X') {
+            sum += fourStepsInAllDirections(grid, point).count { xmas == it }
         }
     }
 
@@ -47,37 +28,28 @@ private fun part1(input: String): Int {
 }
 
 private fun isMasMas(grid: List<List<Char>>, point: Point): Boolean {
-    val upLeft = point.goUpLeft()
-    val upRight = point.goUpRight()
-    val downRight = point.goDownRight()
-    val downLeft = point.goDownLeft()
-
     val mas = listOf('M', 'A', 'S')
-    if (point.row == 1 && point.column == 0) {
-        println(
-            listOf(grid.atOrNull(upLeft), grid.atOrNull(point), grid.atOrNull(downRight))
-        )
-    }
 
-    val first = listOf(grid.atOrNull(upLeft), grid.atOrNull(point), grid.atOrNull(downRight)) == mas
-            || listOf(grid.atOrNull(downRight), grid.atOrNull(point), grid.atOrNull(upLeft)) == mas
-    val second = listOf(grid.atOrNull(upRight), grid.atOrNull(point), grid.atOrNull(downLeft)) == mas
-            || listOf(grid.atOrNull(downLeft), grid.atOrNull(point), grid.atOrNull(upRight)) == mas
+    val upLeftToBottomRight =
+        grid.walkInDirection(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
+    val downRightToUpLeft =
+        grid.walkInDirection(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
 
-    return first && second
+    val upRightToDownLeft =
+        grid.walkInDirection(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
+    val downLeftToUpRight =
+        grid.walkInDirection(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
+
+    return (upLeftToBottomRight == mas || downRightToUpLeft == mas) && (upRightToDownLeft == mas || downLeftToUpRight == mas)
 }
 
 
-private fun part2(input: String): Int {
-    val grid = input.lines().map { it.toList() }.toList()
-
+private fun part2(grid: List<List<Char>>): Int {
     var sum = 0
 
-    for (row in grid.indices) {
-        for (column in grid[row].indices) {
-            if (grid.atOrNull(Point(row = row, column = column)) == 'A') {
-                sum += if (isMasMas(grid, Point(row = row, column = column))) 1 else 0
-            }
+    grid.forEach { point, char ->
+        if (char == 'A') {
+            sum += if (isMasMas(grid, point)) 1 else 0
         }
     }
 
@@ -86,6 +58,7 @@ private fun part2(input: String): Int {
 
 fun main() {
     val input = readFile("/4_1.txt")
-    measure("Day 4 Part 1") { assertAndReturn(part1(input), 2378) }
-    measure("Day 4 Part 2") { assertAndReturn(part2(input), 1796) }
+    val grid = input.lines().map { it.toList() }.toList()
+    measure("Day 4 Part 1") { assertAndReturn(part1(grid), 2378) }
+    measure("Day 4 Part 2") { assertAndReturn(part2(grid), 1796) }
 }

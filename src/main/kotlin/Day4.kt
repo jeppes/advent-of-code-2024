@@ -1,14 +1,13 @@
 package org.example
 
 private fun part1(grid: Grid<Char>): Int {
-    var sum = 0
-
     val xmas = listOf('X', 'M', 'A', 'S')
     val allDirections = listOf(
         Direction.Up, Direction.Down, Direction.Left, Direction.Right,
         Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight
     )
 
+    var sum = 0
     grid.forEach { point, char ->
         if (char == 'X') {
             sum += allDirections
@@ -16,7 +15,6 @@ private fun part1(grid: Grid<Char>): Int {
                 .count { xmas == it }
         }
     }
-
     return sum
 }
 
@@ -39,13 +37,11 @@ private fun isMasMas(grid: List<List<Char>>, point: Point): Boolean {
 
 private fun part2(grid: List<List<Char>>): Int {
     var sum = 0
-
     grid.forEach { point, char ->
         if (char == 'A') {
             sum += if (isMasMas(grid, point)) 1 else 0
         }
     }
-
     return sum
 }
 

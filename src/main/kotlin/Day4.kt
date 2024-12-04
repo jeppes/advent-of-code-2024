@@ -1,10 +1,12 @@
 package org.example
 
+import org.example.Direction.*
+
 private fun part1(grid: Grid<Char>): Int {
     val xmas = listOf('X', 'M', 'A', 'S')
     val allDirections = listOf(
-        Direction.Up, Direction.Down, Direction.Left, Direction.Right,
-        Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight
+        Up, Down, Left, Right,
+        UpLeft, UpRight, DownLeft, DownRight
     )
 
     return grid.sumOf { (point, char) ->
@@ -28,14 +30,14 @@ private fun part2(grid: Grid<Char>): Int {
         }
 
         val upLeftToBottomRight =
-            grid.walk(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
+            grid.walk(startAt = point.go(UpLeft), steps = 2, direction = DownRight)
         val downRightToUpLeft =
-            grid.walk(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
+            grid.walk(startAt = point.go(DownRight), steps = 2, direction = UpLeft)
 
         val upRightToDownLeft =
-            grid.walk(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
+            grid.walk(startAt = point.go(UpRight), steps = 2, direction = DownLeft)
         val downLeftToUpRight =
-            grid.walk(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
+            grid.walk(startAt = point.go(DownLeft), steps = 2, direction = UpRight)
 
         val isMas1 = upLeftToBottomRight == mas || downRightToUpLeft == mas
         val isMas2 = upRightToDownLeft == mas || downLeftToUpRight == mas

@@ -18,28 +18,30 @@ private fun part1(grid: Grid<Char>): Int {
     return sum
 }
 
-private fun isMasMas(grid: List<List<Char>>, point: Point): Boolean {
-    val mas = listOf('M', 'A', 'S')
-
-    val upLeftToBottomRight =
-        grid.walkInDirection(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
-    val downRightToUpLeft =
-        grid.walkInDirection(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
-
-    val upRightToDownLeft =
-        grid.walkInDirection(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
-    val downLeftToUpRight =
-        grid.walkInDirection(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
-
-    return (upLeftToBottomRight == mas || downRightToUpLeft == mas) && (upRightToDownLeft == mas || downLeftToUpRight == mas)
-}
-
 
 private fun part2(grid: List<List<Char>>): Int {
+    val mas = listOf('M', 'A', 'S')
+
     var sum = 0
     grid.forEach { point, char ->
-        if (char == 'A') {
-            sum += if (isMasMas(grid, point)) 1 else 0
+        if (char != 'A') {
+            return@forEach
+        }
+
+        val upLeftToBottomRight =
+            grid.walkInDirection(startAt = point.go(Direction.UpLeft), steps = 2, direction = Direction.DownRight)
+        val downRightToUpLeft =
+            grid.walkInDirection(startAt = point.go(Direction.DownRight), steps = 2, direction = Direction.UpLeft)
+
+        val upRightToDownLeft =
+            grid.walkInDirection(startAt = point.go(Direction.UpRight), steps = 2, direction = Direction.DownLeft)
+        val downLeftToUpRight =
+            grid.walkInDirection(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
+
+        if ((upLeftToBottomRight == mas || downRightToUpLeft == mas)
+            && (upRightToDownLeft == mas || downLeftToUpRight == mas)
+        ) {
+            sum += 1
         }
     }
     return sum

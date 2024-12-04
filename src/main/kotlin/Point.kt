@@ -17,15 +17,4 @@ data class Point(val column: Int, val row: Int) {
             Direction.DownRight -> copy(column = column + 1, row = row + 1)
         }
     }
-
-    val cardinalNeighbors: List<Point>
-        get() {
-            return listOf(Direction.Left, Direction.Right, Direction.Up, Direction.Down).map { go(it) }
-        }
-
-    val allNeighbors: List<Point>
-        get() {
-            return Direction.entries.map { go(it) }
-        }
-
 }

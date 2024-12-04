@@ -13,7 +13,7 @@ private fun part1(grid: Grid<Char>): Int {
         if (char == 'X') {
             allDirections
                 .map { direction -> grid.walk(startAt = point, steps = 3, direction = direction) }
-                .count { xmas == it }
+                .count { path -> xmas == path }
         } else {
             0
         }

@@ -7,25 +7,24 @@ private fun part1(grid: Grid<Char>): Int {
         Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight
     )
 
-    var sum = 0
-    grid.forEach { point, char ->
+    return grid.sumOf { (point, char) ->
         if (char == 'X') {
-            sum += allDirections
+            allDirections
                 .map { direction -> grid.walkInDirection(startAt = point, steps = 3, direction = direction) }
                 .count { xmas == it }
+        } else {
+            0
         }
     }
-    return sum
 }
 
 
-private fun part2(grid: List<List<Char>>): Int {
+private fun part2(grid: Grid<Char>): Int {
     val mas = listOf('M', 'A', 'S')
 
-    var sum = 0
-    grid.forEach { point, char ->
+    return grid.count { (point, char) ->
         if (char != 'A') {
-            return@forEach
+            return@count false
         }
 
         val upLeftToBottomRight =
@@ -38,18 +37,15 @@ private fun part2(grid: List<List<Char>>): Int {
         val downLeftToUpRight =
             grid.walkInDirection(startAt = point.go(Direction.DownLeft), steps = 2, direction = Direction.UpRight)
 
-        if ((upLeftToBottomRight == mas || downRightToUpLeft == mas)
-            && (upRightToDownLeft == mas || downLeftToUpRight == mas)
-        ) {
-            sum += 1
-        }
+        val isMas1 = upLeftToBottomRight == mas || downRightToUpLeft == mas
+        val isMas2 = upRightToDownLeft == mas || downLeftToUpRight == mas
+        isMas1 && isMas2
     }
-    return sum
 }
 
 fun main() {
     val input = readFile("/4_1.txt")
-    val grid = input.lines().map { it.toList() }.toList()
+    val grid = Grid(input.lines().map { it.toList() }.toList())
     measure("Day 4 Part 1") { assertAndReturn(part1(grid), 2378) }
     measure("Day 4 Part 2") { assertAndReturn(part2(grid), 1796) }
 }

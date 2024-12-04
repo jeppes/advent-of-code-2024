@@ -1,26 +1,43 @@
 package org.example
 
-typealias Grid<T> = List<List<T>>
+data class Grid<T>(
+    private val underlying: List<List<T>>,
+) : Iterable<Pair<Point, T>> {
+    override fun iterator(): Iterator<Pair<Point, T>> {
+        return object : Iterator<Pair<Point, T>> {
+            private var row = 0
+            private var column = 0
 
-fun <T> Grid<T>.atOrNull(point: Point): T? {
-    return this.getOrNull(point.row)?.getOrNull(point.column)
-}
+            override fun hasNext(): Boolean {
+                return row < underlying.size
+            }
 
-fun <T> Grid<T>.forEach(block: (Point, T) -> Unit) {
-    for (row in indices) {
-        for (column in this[row].indices) {
-            val point = Point(row = row, column = column)
-            val t = atOrNull(point)!!
-            block(point, t)
+            override fun next(): Pair<Point, T> {
+                val point = Point(row = row, column = column)
+                val value = underlying[row][column]
+
+                if (column == underlying[row].size - 1) {
+                    row++
+                    column = 0
+                } else {
+                    column++
+                }
+
+                return point to value
+            }
         }
     }
-}
 
-fun <T> Grid<T>.walkInDirection(
-    startAt: Point,
-    steps: Int,
-    direction: Direction,
-): List<T?> {
-    val points = (1..steps).fold(listOf(startAt)) { points, _ -> points + points.last().go(direction) }
-    return points.mapNotNull(this::atOrNull)
+    fun atOrNull(point: Point): T? {
+        return underlying.getOrNull(point.row)?.getOrNull(point.column)
+    }
+
+    fun walkInDirection(
+        startAt: Point,
+        steps: Int,
+        direction: Direction,
+    ): List<T?> {
+        val points = (1..steps).fold(listOf(startAt)) { points, _ -> points + points.last().go(direction) }
+        return points.mapNotNull(this::atOrNull)
+    }
 }

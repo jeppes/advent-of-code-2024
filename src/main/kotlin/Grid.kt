@@ -1,7 +1,7 @@
 package org.example
 
 data class Grid<T>(
-    private val underlying: List<List<T>>,
+    private val listOfList: List<List<T>>,
 ) : Iterable<Pair<Point, T>> {
     override fun iterator(): Iterator<Pair<Point, T>> {
         return object : Iterator<Pair<Point, T>> {
@@ -9,14 +9,14 @@ data class Grid<T>(
             private var column = 0
 
             override fun hasNext(): Boolean {
-                return row < underlying.size
+                return row < listOfList.size
             }
 
             override fun next(): Pair<Point, T> {
                 val point = Point(row = row, column = column)
-                val value = underlying[row][column]
+                val value = listOfList[row][column]
 
-                if (column == underlying[row].size - 1) {
+                if (column == listOfList[row].size - 1) {
                     row++
                     column = 0
                 } else {
@@ -29,7 +29,7 @@ data class Grid<T>(
     }
 
     fun atOrNull(point: Point): T? {
-        return underlying.getOrNull(point.row)?.getOrNull(point.column)
+        return listOfList.getOrNull(point.row)?.getOrNull(point.column)
     }
 
     fun walkInDirection(

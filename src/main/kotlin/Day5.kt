@@ -13,19 +13,14 @@ private fun solve(input: String, part: Part): Int {
 
     val printedBefore = mutableMapOf<Int, MutableSet<Int>>()
 
-    fun saveXComesBeforeY(x: Int, y: Int) {
-        if (x == y) return
-        val printedBeforeSet = printedBefore[x] ?: mutableSetOf()
-        printedBefore[x] = printedBeforeSet
-
-        printedBeforeSet.add(y)
-    }
-
     for (rule in sortingRules) {
         val (left, right) = rule.split("|").map { it.toInt() }
-        saveXComesBeforeY(left, right)
-    }
 
+        val printedBeforeSet = printedBefore[left] ?: mutableSetOf()
+        printedBefore[left] = printedBeforeSet
+
+        printedBeforeSet.add(right)
+    }
 
     val problems = lines.drop(sortingRules.size + 1)
 

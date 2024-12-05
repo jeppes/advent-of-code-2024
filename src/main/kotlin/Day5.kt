@@ -28,7 +28,8 @@ private fun solve(input: String, part: Part): Int {
         val numbers = problem.split(",").map { it.toInt() }
 
         val sorted = numbers.sortedWith { left, right ->
-            printedBefore[left]?.contains(right)?.let { if (it) -1 else 1 } ?: 0
+            if (printedBefore[left]?.contains(right) == true) -1
+            else 0
         }
 
         when (part) {

@@ -11,13 +11,13 @@ private fun solve(input: String, part: Part): Int {
 
     val sortingRules = lines.takeWhile { it.isNotEmpty() }
 
-    val printedBefore = mutableMapOf<Int, MutableSet<Int>>()
+    val printedAfter = mutableMapOf<Int, MutableSet<Int>>()
 
     for (rule in sortingRules) {
         val (left, right) = rule.split("|").map { it.toInt() }
 
-        val printedBeforeSet = printedBefore[left] ?: mutableSetOf()
-        printedBefore[left] = printedBeforeSet
+        val printedBeforeSet = printedAfter[left] ?: mutableSetOf()
+        printedAfter[left] = printedBeforeSet
 
         printedBeforeSet.add(right)
     }
@@ -28,7 +28,8 @@ private fun solve(input: String, part: Part): Int {
         val numbers = problem.split(",").map { it.toInt() }
 
         val sorted = numbers.sortedWith { left, right ->
-            if (printedBefore[left]?.contains(right) == true) -1
+            val printedAfterLeft = printedAfter[left] ?: emptySet()
+            if (printedAfterLeft.contains(right)) -1
             else 0
         }
 

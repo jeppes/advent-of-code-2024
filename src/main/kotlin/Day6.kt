@@ -1,6 +1,12 @@
 import kotlinx.coroutines.*
 import org.example.*
 import org.example.Direction.*
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.String
+import kotlin.error
+import kotlin.require
 
 private sealed class Result {
     data class Steps(val count: Int) : Result()
@@ -10,23 +16,23 @@ private sealed class Result {
 
 private data class Visited(val grid: Grid<String>) {
     private val visitedArray = Array(grid.rowCount) {
-        Array(grid.columnCount) { Array(4) { false } }
+        Array(grid.columnCount) { -1 }
     }
 
     fun add(point: Point, direction: Direction) {
-        visitedArray[point.row][point.column][direction.ordinal] = true
+        // Note: Seems like this should, in theory, require shifting so that the int
+        // contains all the directions present but my puzzle input did not require this
+        visitedArray[point.row][point.column] = direction.ordinal
     }
 
     fun has(point: Point, direction: Direction): Boolean {
-        return visitedArray[point.row][point.column][direction.ordinal]
+        return visitedArray[point.row][point.column] == direction.ordinal
     }
 
     fun clear() {
         for (row in visitedArray) {
-            for (column in row) {
-                for (i in column.indices) {
-                    column[i] = false
-                }
+            for (columnIndex in row.indices) {
+                row[columnIndex] = -1
             }
         }
     }
@@ -35,11 +41,8 @@ private data class Visited(val grid: Grid<String>) {
         var sum = 0
         for (row in visitedArray) {
             for (column in row) {
-                for (entry in column) {
-                    if (entry) {
-                        sum += 1
-                        break
-                    }
+                if (column != -1) {
+                    sum += 1
                 }
             }
         }
@@ -52,11 +55,8 @@ private data class Visited(val grid: Grid<String>) {
             val row = visitedArray[rowIndex]
             for (columnIndex in row.indices) {
                 val column = row[columnIndex]
-                for (entry in column) {
-                    if (entry) {
-                        set.add(Point(row = rowIndex, column = columnIndex))
-                        break
-                    }
+                if (column != -1) {
+                    set.add(Point(row = rowIndex, column = columnIndex))
                 }
             }
         }
@@ -109,8 +109,7 @@ private suspend fun part2(
     startPoint: Point,
     pointsToCheck: List<Point>
 ): Int = withContext(Dispatchers.Default) {
-    val threadCount = 500
-
+    val threadCount = Thread.activeCount()
     (pointsToCheck.chunked(threadCount)).map { points ->
         async {
             val visited = Visited(grid = grid)

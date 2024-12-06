@@ -10,6 +10,9 @@ data class Grid<T>(
         }
     }
 
+    val rowCount = listOfList.size
+    val columnCount = listOfList.firstOrNull()?.size ?: 0
+
     override fun iterator(): Iterator<Pair<Point, T>> {
         return listOfList.indices.flatMap { row ->
             listOfList[row].indices.map { column ->
@@ -25,7 +28,7 @@ data class Grid<T>(
         return listOfList[point.row][point.column]
     }
 
-    private fun getOrNull(point: Point): T? {
+    fun getOrNull(point: Point): T? {
         return listOfList.getOrNull(point.row)?.getOrNull(point.column)
     }
 

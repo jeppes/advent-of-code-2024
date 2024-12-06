@@ -2,11 +2,11 @@ import org.example.assertAndReturn
 import org.example.measure
 import org.example.readFile
 
-enum class Part {
+private enum class Part {
     Part1, Part2
 }
 
-private fun solve(input: String, part: Part): Int {
+private fun part1(input: String, part: Part): Int {
     val lines = input.lines()
 
     val sortingRules = lines.takeWhile { it.isNotEmpty() }
@@ -47,6 +47,6 @@ private fun solve(input: String, part: Part): Int {
 fun main() {
     val input = readFile("/5_1.txt")
 
-    measure("Day 4 Part 1") { assertAndReturn(solve(input, Part.Part1), 5639) }
-    measure("Day 4 Part 2") { assertAndReturn(solve(input, Part.Part2), 5273) }
+    measure("Day 5 Part 1") { assertAndReturn(part1(input, Part.Part1), 5639) }
+    measure("Day 5 Part 2") { assertAndReturn(part1(input, Part.Part2), 5273) }
 }

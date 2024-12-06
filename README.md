@@ -10,3 +10,5 @@
 
 [Day 5](src/main/kotlin/Day5.kt) ⭐⭐
 
+[Day 6](src/main/kotlin/Day6.kt) ⭐⭐
+

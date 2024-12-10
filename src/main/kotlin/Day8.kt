@@ -52,12 +52,12 @@ private fun part2(grid: Grid<String>): Int {
 
 
 fun main() {
-    measure("Day 7 Part 1") {
+    measure("Day 8 Part 2") {
         val grid = Grid(readFile("/8_1.txt").lines().map { it.split("").filter { c -> c.isNotBlank() } })
         assertAndReturn(part1(grid), 256)
     }
 
-    measure("Day 7 Part 2") {
+    measure("Day 8 Part 2") {
         val grid = Grid(readFile("/8_1.txt").lines().map { it.split("").filter { c -> c.isNotBlank() } })
         assertAndReturn(part2(grid), 1005)
     }

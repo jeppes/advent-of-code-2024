@@ -19,3 +19,5 @@
 [Day 9](src/main/kotlin/Day9.kt) ⭐⭐
 
 [Day 10](src/main/kotlin/Day10.kt) ⭐⭐
+
+[Day 11](src/main/kotlin/Day11.kt) ⭐⭐
